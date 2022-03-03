@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -11,6 +11,9 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using WindowsInput.Native;
 using WindowsInput;
+using KeyboardHookManager;
+using Utilities;
+using InputManager;
 
 
 
@@ -21,6 +24,8 @@ namespace LegoCode
     public partial class Form1 : Form
     {
         InputSimulator sim = new InputSimulator();
+        globalKeyboardHook gkh = new globalKeyboardHook();
+
         public Form1()
         {
             InitializeComponent();
@@ -67,26 +72,42 @@ namespace LegoCode
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
-
+            /*
+            gkh.HookedKeys.Add(Keys.A);
+            gkh.HookedKeys.Add(Keys.B);
+            gkh.KeyDown += new KeyEventHandler(gkh_KeyDown);
+            gkh.KeyUp += new KeyEventHandler(gkh_KeyUp);
+            */
+            }
+        void gkh_KeyUp(object sender, KeyEventArgs e)
+        {
+            lstLog.Items.Add("Up\t" + e.KeyCode.ToString());
+            e.Handled = true;
         }
+
+        void gkh_KeyDown(object sender, KeyEventArgs e)
+        {
+            lstLog.Items.Add("Down\t" + e.KeyCode.ToString());
+            e.Handled = true;
+        }
+
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var sKey = sim.Keyboard;
+            //var sKey = sim.Keyboard;
+
+
             //sim.Keyboard.KeyPress()
             //sim.SimulateKeyPress(VirtualKeyCode.SPACE);
-            
 
-            sKey.Sleep(10000);
-            //sKey.TextEntry("Subscribe!");
-            sim.Keyboard.ModifiedKeyStroke(VirtualKeyCode.VK_A, VirtualKeyCode.VK_L);
-            sim.Keyboard.KeyPress(VirtualKeyCode.VK_L);
+            cToCount("X");
+            //sKey.Sleep(10000);
+            Thread.Sleep(15000);
+            label3.Text = "Running code now!";
 
             string[] codeArray = new string[] {
-            "AU25GR",
             "28SPSR",
-            "VK3TP3"
+            //"VK3TP3"
 
 
             };
@@ -98,46 +119,67 @@ namespace LegoCode
             foreach (var code in codeArray)
             {
                 Console.WriteLine("Printing letters in name: {0}", code);
+                listBox1.Items.Add(code);
                 foreach (var letter in code)
                 {
                     //Console.WriteLine(letter);
-                    cToCount(letter.ToString());
+                    //cToCount(letter.ToString());
                     
                 }
             }
-            codeUp(1);
+            //codeUp(1);
         }
         public void codeUp(int n)
         {
             
             Console.WriteLine("-------------");
             for (int i = 1; i <= n; i++)
-            {
-                
+            {      
                 Console.WriteLine(i);
 
             }
             
-
-
         }
         public void gokeyUp(int count)
         {
             //SendKeys.Send("{UP}");
-            for (int i = 0; i <= count; i++)
+            for (int i = 1; i == count; i++)
             {
 
-                Console.WriteLine(i);
-                sim.Keyboard.KeyPress(VirtualKeyCode.VK_W);
+                Console.WriteLine("Keyup: " + i);
+                
+                Keyboard.KeyDown(Keys.W);
+                Thread.Sleep(50);
+                Keyboard.KeyUp(Keys.W);
+                
+                
 
             }
-            sim.Keyboard.KeyPress(VirtualKeyCode.VK_D);
-            //SendKeys.Send("{D}");
+
+            
+            Keyboard.KeyDown(Keys.D);
+            Thread.Sleep(50);
+            Keyboard.KeyUp(Keys.D);
+            
+
         }
         public void gokeyDown(int count)
         {
-            for (int i = 0; i <= count; i++)
-                SendKeys.Send("{S}");
+            for (int i = 1; i == count; i++)
+            {
+                Console.WriteLine("Keydown: " + i);
+                
+                Keyboard.KeyDown(Keys.S);
+                Thread.Sleep(50);
+                Keyboard.KeyUp(Keys.S);
+                
+
+            }
+            
+            Keyboard.KeyDown(Keys.D);
+            Thread.Sleep(50);
+            Keyboard.KeyUp(Keys.D);
+            
         }
         public void cToCount(string letter)
         {
@@ -147,38 +189,51 @@ namespace LegoCode
             {
                 case "0":
                     Console.WriteLine("-10");
+                    gokeyDown(10);
                     break;
                 case "1":
                     Console.WriteLine("-9");
+                    gokeyDown(9);
                     break;
                 case "2":
                     Console.WriteLine("-8");
+                    gokeyDown(8);
                     break;
                 case "3":
                     Console.WriteLine("-7");
+                    gokeyDown(7);
                     break;
                 case "4":
                     Console.WriteLine("-6");
+                    gokeyDown(6);
                     break;
                 case "5":
                     Console.WriteLine("-5");
+                    gokeyDown(5);
                     break;
                 case "6":
                     Console.WriteLine("-4");
+                    gokeyDown(4);
                     break;
                 case "7":
                     Console.WriteLine("-3");
+                    gokeyDown(3);
                     break;
                 case "8":
                     Console.WriteLine("-2");
+                    gokeyDown(2);
                     break;
                 case "9":
                     // Arrow Down
                     Console.WriteLine("-1");
+                    gokeyDown(1);
                     break;
                 case "A":
-                    Console.WriteLine("0");      
-                break;
+                    Console.WriteLine("0");
+                    Keyboard.KeyDown(Keys.D);
+                    Thread.Sleep(100);
+                    Keyboard.KeyUp(Keys.D);
+                    break;
                     // Arrow Up
                 case "B":
                     Console.WriteLine("1");
@@ -301,6 +356,14 @@ namespace LegoCode
         private void button3_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (textBox1.Text.Length != 0) {
+                listBox1.Items.Add(textBox1.Text);
+            }
+           
         }
     }
 }

@@ -100,13 +100,13 @@ namespace LegoCode
             //sim.Keyboard.KeyPress()
             //sim.SimulateKeyPress(VirtualKeyCode.SPACE);
 
-            cToCount("X");
+            //cToCount("X");
             //sKey.Sleep(10000);
             Thread.Sleep(15000);
             label3.Text = "Running code now!";
 
             string[] codeArray = new string[] {
-            "28SPSR",
+              "7VNLJT",
             //"VK3TP3"
 
 
@@ -118,14 +118,19 @@ namespace LegoCode
 
             foreach (var code in codeArray)
             {
+                // Some games use arrows lol!
                 Console.WriteLine("Printing letters in name: {0}", code);
                 listBox1.Items.Add(code);
                 foreach (var letter in code)
                 {
                     //Console.WriteLine(letter);
-                    //cToCount(letter.ToString());
+                    cToCount(letter.ToString());
                     
                 }
+                Keyboard.KeyDown(Keys.Enter);
+                Thread.Sleep(100);
+                Keyboard.KeyUp(Keys.Enter);
+
             }
             //codeUp(1);
         }
@@ -143,43 +148,46 @@ namespace LegoCode
         public void gokeyUp(int count)
         {
             //SendKeys.Send("{UP}");
-            for (int i = 1; i == count; i++)
+            for (int i = 1; i <= count; i++)
             {
-
+                // Otherwise W
                 Console.WriteLine("Keyup: " + i);
                 
-                Keyboard.KeyDown(Keys.W);
-                Thread.Sleep(50);
-                Keyboard.KeyUp(Keys.W);
-                
-                
+                Keyboard.KeyDown(Keys.Up);
+                Thread.Sleep(100);
+                Keyboard.KeyUp(Keys.Up);
+                Thread.Sleep(100);
 
-            }
 
-            
-            Keyboard.KeyDown(Keys.D);
-            Thread.Sleep(50);
-            Keyboard.KeyUp(Keys.D);
-            
+
+            }    
+            Keyboard.KeyDown(Keys.Right);
+            Thread.Sleep(100);
+            Keyboard.KeyUp(Keys.Right);
+            Thread.Sleep(100);
+
 
         }
         public void gokeyDown(int count)
         {
-            for (int i = 1; i == count; i++)
+            for (int i = 1; i <= count; i++)
             {
+                //S otherwise
                 Console.WriteLine("Keydown: " + i);
                 
-                Keyboard.KeyDown(Keys.S);
-                Thread.Sleep(50);
-                Keyboard.KeyUp(Keys.S);
-                
+                Keyboard.KeyDown(Keys.Down);
+                Thread.Sleep(100);
+                Keyboard.KeyUp(Keys.Down);
+                Thread.Sleep(100);
+
 
             }
             
-            Keyboard.KeyDown(Keys.D);
-            Thread.Sleep(50);
-            Keyboard.KeyUp(Keys.D);
-            
+            Keyboard.KeyDown(Keys.Right);
+            Thread.Sleep(100);
+            Keyboard.KeyUp(Keys.Right);
+            Thread.Sleep(100);
+
         }
         public void cToCount(string letter)
         {
@@ -319,7 +327,6 @@ namespace LegoCode
                     Console.WriteLine("21");
                     gokeyUp(21);
                     break;
-
                 case "W":
                     Console.WriteLine("22");
                     gokeyUp(22);
@@ -327,6 +334,10 @@ namespace LegoCode
                 case "X":
                     Console.WriteLine("23");
                     gokeyUp(23);
+                    break;
+                case "Y":
+                    Console.WriteLine("23");
+                    gokeyUp(24);
                     break;
 
 

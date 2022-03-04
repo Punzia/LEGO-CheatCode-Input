@@ -9,10 +9,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
 using System.Runtime.InteropServices;
-using WindowsInput.Native;
-using WindowsInput;
-using KeyboardHookManager;
-using Utilities;
 using InputManager;
 
 
@@ -23,8 +19,6 @@ namespace LegoCode
 {
     public partial class Form1 : Form
     {
-        InputSimulator sim = new InputSimulator();
-        globalKeyboardHook gkh = new globalKeyboardHook();
 
         public Form1()
         {
@@ -38,59 +32,10 @@ namespace LegoCode
         [DllImportAttribute("user32.dll")]
         public static extern bool ReleaseCapture();
 
-
-        //----
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
-
-        [DllImport("user32.dll")]
-        public static extern IntPtr PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
-
-        /*
-        public class MyProgram
-		{
-            [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-            public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
- 
-            [DllImport("user32.dll")]
-            public static extern IntPtr PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
- 
-            public static void Keyboard()
-            {
-                IntPtr WindowName = FindWindow(null, "Battlefield 4");
-                if (WindowName == IntPtr.Zero)
-                {
-                    MessageBox.Show("Game is not running."); return;
-                }
- 
-                PostMessage(WindowName, 0x100, (IntPtr)Keys.W, IntPtr.Zero);
-                System.Threading.Thread.Sleep(100);
-                PostMessage(WindowName, 0x101, (IntPtr)Keys.W, IntPtr.Zero);
-            }
-        }
-         */
-
         private void Form1_Load(object sender, EventArgs e)
         {
-            /*
-            gkh.HookedKeys.Add(Keys.A);
-            gkh.HookedKeys.Add(Keys.B);
-            gkh.KeyDown += new KeyEventHandler(gkh_KeyDown);
-            gkh.KeyUp += new KeyEventHandler(gkh_KeyUp);
-            */
-            }
-        void gkh_KeyUp(object sender, KeyEventArgs e)
-        {
-            lstLog.Items.Add("Up\t" + e.KeyCode.ToString());
-            e.Handled = true;
-        }
 
-        void gkh_KeyDown(object sender, KeyEventArgs e)
-        {
-            lstLog.Items.Add("Down\t" + e.KeyCode.ToString());
-            e.Handled = true;
         }
-
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -103,10 +48,10 @@ namespace LegoCode
             //cToCount("X");
             //sKey.Sleep(10000);
             Thread.Sleep(15000);
-            label3.Text = "Running code now!";
+            lstLog.Items.Add("Running code now!");
 
             string[] codeArray = new string[] {
-              "7VNLJT",
+              "ECU428",
             //"VK3TP3"
 
 
@@ -114,85 +59,154 @@ namespace LegoCode
 
             //Thread.Sleep(20000);
             //label1.Text = "Started";
-            
+
 
             foreach (var code in codeArray)
             {
                 // Some games use arrows lol!
-                Console.WriteLine("Printing letters in name: {0}", code);
-                listBox1.Items.Add(code);
+                //Console.WriteLine("Printing letters in name: {0}", code);
+                //lstLog.Items.Add("Printing letters in name: " + code);
+
+
+                //listBox1.Items.Add(code);
                 foreach (var letter in code)
                 {
                     //Console.WriteLine(letter);
                     cToCount(letter.ToString());
-                    
-                }
-                Keyboard.KeyDown(Keys.Enter);
-                Thread.Sleep(100);
-                Keyboard.KeyUp(Keys.Enter);
 
+                }
+                if (WASD_Radio.Checked)
+                {
+                    Keyboard.KeyDown(Keys.U);
+                    Thread.Sleep(100);
+                    Keyboard.KeyUp(Keys.U);
+
+                }
+                if(Arrow_Radio.Checked)
+                {
+                    Keyboard.KeyDown(Keys.Enter);
+                    Thread.Sleep(100);
+                    Keyboard.KeyUp(Keys.Enter);
+
+                }
             }
             //codeUp(1);
         }
-        public void codeUp(int n)
-        {
-            
-            Console.WriteLine("-------------");
-            for (int i = 1; i <= n; i++)
-            {      
-                Console.WriteLine(i);
-
-            }
-            
-        }
         public void gokeyUp(int count)
         {
-            //SendKeys.Send("{UP}");
-            for (int i = 1; i <= count; i++)
+            int whatBtn = 0;
+
+            if (WASD_Radio.Checked)
             {
-                // Otherwise W
-                Console.WriteLine("Keyup: " + i);
+                whatBtn = 1;
+
+            }
+            else if (Arrow_Radio.Checked)
+            {
+                whatBtn = 2;
+            }
+            if (whatBtn != 0)
+            {
+                //SendKeys.Send("{UP}");
+                for (int i = 1; i <= count; i++)
+                {
+                    // Otherwise W
+                    
+                    if (whatBtn == 1)
+                    {
+                        lstLog.Items.Add("Keyup W: " + i);
+                        Keyboard.KeyDown(Keys.W);
+                        Thread.Sleep(100);
+                        Keyboard.KeyUp(Keys.W);
+                        Thread.Sleep(100);
+                    }
+                    else if (whatBtn == 2)
+                    {
+                        lstLog.Items.Add("Keyup Up: " + i);
+                        Keyboard.KeyDown(Keys.Up);
+                        Thread.Sleep(100);
+                        Keyboard.KeyUp(Keys.Up);
+                        Thread.Sleep(100);
+                    }
+                }
+            }
+
+            goNextLetter(whatBtn);
+
+
+
+
+        }
+
+        public void goNextLetter(int keybtn)
+        {
+            if (keybtn == 1)
+            {
                 
-                Keyboard.KeyDown(Keys.Up);
+                Keyboard.KeyDown(Keys.D);
                 Thread.Sleep(100);
-                Keyboard.KeyUp(Keys.Up);
+                Keyboard.KeyUp(Keys.D);
                 Thread.Sleep(100);
 
+            }
+            else if (keybtn == 2)
+            {
+                Keyboard.KeyDown(Keys.Right);
+                Thread.Sleep(100);
+                Keyboard.KeyUp(Keys.Right);
+                Thread.Sleep(100);
 
-
-            }    
-            Keyboard.KeyDown(Keys.Right);
-            Thread.Sleep(100);
-            Keyboard.KeyUp(Keys.Right);
-            Thread.Sleep(100);
-
-
+            }
         }
         public void gokeyDown(int count)
         {
-            for (int i = 1; i <= count; i++)
-            {
-                //S otherwise
-                Console.WriteLine("Keydown: " + i);
-                
-                Keyboard.KeyDown(Keys.Down);
-                Thread.Sleep(100);
-                Keyboard.KeyUp(Keys.Down);
-                Thread.Sleep(100);
+            int whatBtn = 0;
 
+            if (WASD_Radio.Checked)
+            {
+                whatBtn = 1;
 
             }
-            
-            Keyboard.KeyDown(Keys.Right);
-            Thread.Sleep(100);
-            Keyboard.KeyUp(Keys.Right);
-            Thread.Sleep(100);
+            else if (Arrow_Radio.Checked)
+            {
+                whatBtn = 2;
+            }
+            if (whatBtn != 0)
+            {
+                for (int i = 1; i <= count; i++)
+                {
+                    //S otherwise
+                    
+                    if (whatBtn == 1)
+                    {
+                        lstLog.Items.Add("Keyup S: " + i);
+                        Keyboard.KeyDown(Keys.S);
+                        Thread.Sleep(100);
+                        Keyboard.KeyUp(Keys.S);
+                        Thread.Sleep(100);
+                    }
+                    else if (whatBtn == 2)
+                    {
+                        lstLog.Items.Add("Keyup Down: " + i);
+                        Keyboard.KeyDown(Keys.Down);
+                        Thread.Sleep(100);
+                        Keyboard.KeyUp(Keys.Down);
+                        Thread.Sleep(100);
+
+
+                    }
+
+
+
+                }
+            }
+            goNextLetter(whatBtn);
 
         }
         public void cToCount(string letter)
         {
-            
-            
+
+
             switch (letter)
             {
                 case "0":
@@ -242,7 +256,7 @@ namespace LegoCode
                     Thread.Sleep(100);
                     Keyboard.KeyUp(Keys.D);
                     break;
-                    // Arrow Up
+                // Arrow Up
                 case "B":
                     Console.WriteLine("1");
                     gokeyUp(1);
@@ -339,13 +353,6 @@ namespace LegoCode
                     Console.WriteLine("23");
                     gokeyUp(24);
                     break;
-
-
-
-
-
-
-
             }
 
         }
@@ -371,10 +378,20 @@ namespace LegoCode
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (textBox1.Text.Length != 0) {
+            if (textBox1.Text == "")
+            {
+                MessageBox.Show("Sorry you haven't written anything!");
+            }
+            if (textBox1.Text.Length < 6)
+            {
+                MessageBox.Show("Less than 6");
+            }
+            if (textBox1.Text.Length != 0 && textBox1.Text.Length == 6)
+            {
                 listBox1.Items.Add(textBox1.Text);
             }
-           
+
+
         }
     }
 }

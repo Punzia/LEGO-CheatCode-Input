@@ -39,6 +39,28 @@ namespace LegoCode
 
         private void button1_Click(object sender, EventArgs e)
         {
+
+            getCodes();
+            //codeUp(1);
+        }
+        public void checkThread()
+        {
+            /*
+            Thread thread1 = new Thread(Form1.DoWork);
+            thread1.Start();
+            for (int i = 0; i < 3; i++)
+            {
+                Console.WriteLine("In main.");
+                Thread.Sleep(100);
+            }
+            */
+        }
+        public async void getCodes()
+        {
+            if (!WASD_Radio.Checked && !Arrow_Radio.Checked) {
+                MessageBox.Show("No input decided!");
+            }
+            await Task.Delay(5000);
             //var sKey = sim.Keyboard;
 
 
@@ -47,20 +69,23 @@ namespace LegoCode
 
             //cToCount("X");
             //sKey.Sleep(10000);
-            Thread.Sleep(15000);
+            //Thread.Sleep(15000);
             lstLog.Items.Add("Running code now!");
-
+            /*
             string[] codeArray = new string[] {
-              "ECU428",
+              "CCCCC",
             //"VK3TP3"
 
 
             };
+            */
+            string[] codeArray = listBox1.Items.OfType<string>().ToArray();
+            Console.WriteLine("Hey");
 
             //Thread.Sleep(20000);
             //label1.Text = "Started";
 
-
+            
             foreach (var code in codeArray)
             {
                 // Some games use arrows lol!
@@ -75,22 +100,24 @@ namespace LegoCode
                     cToCount(letter.ToString());
 
                 }
+                
                 if (WASD_Radio.Checked)
                 {
+                    lstLog.Items.Add("Confirmed Code! U");
                     Keyboard.KeyDown(Keys.U);
-                    Thread.Sleep(100);
                     Keyboard.KeyUp(Keys.U);
 
                 }
-                if(Arrow_Radio.Checked)
+                if (Arrow_Radio.Checked)
                 {
+                    lstLog.Items.Add("Confirmed Code! ENTER");
                     Keyboard.KeyDown(Keys.Enter);
-                    Thread.Sleep(100);
                     Keyboard.KeyUp(Keys.Enter);
 
                 }
+                
             }
-            //codeUp(1);
+
         }
         public void gokeyUp(int count)
         {
@@ -111,31 +138,33 @@ namespace LegoCode
                 for (int i = 1; i <= count; i++)
                 {
                     // Otherwise W
-                    
                     if (whatBtn == 1)
                     {
                         lstLog.Items.Add("Keyup W: " + i);
                         Keyboard.KeyDown(Keys.W);
-                        Thread.Sleep(100);
                         Keyboard.KeyUp(Keys.W);
-                        Thread.Sleep(100);
+
+
                     }
                     else if (whatBtn == 2)
                     {
                         lstLog.Items.Add("Keyup Up: " + i);
                         Keyboard.KeyDown(Keys.Up);
-                        Thread.Sleep(100);
+                        //await Task.Delay(1000);
                         Keyboard.KeyUp(Keys.Up);
-                        Thread.Sleep(100);
+                        //await Task.Delay(1000);
+                        
                     }
+  
+
                 }
+
+
+
             }
-
+           
+            lstLog.Items.Add("D");         
             goNextLetter(whatBtn);
-
-
-
-
         }
 
         public void goNextLetter(int keybtn)
@@ -143,18 +172,16 @@ namespace LegoCode
             if (keybtn == 1)
             {
                 
-                Keyboard.KeyDown(Keys.D);
-                Thread.Sleep(100);
+                Keyboard.KeyDown(Keys.D);     
                 Keyboard.KeyUp(Keys.D);
-                Thread.Sleep(100);
+                //await Task.Delay(1000);
 
             }
             else if (keybtn == 2)
             {
                 Keyboard.KeyDown(Keys.Right);
-                Thread.Sleep(100);
                 Keyboard.KeyUp(Keys.Right);
-                Thread.Sleep(100);
+                //await Task.Delay(1000);
 
             }
         }
@@ -181,29 +208,25 @@ namespace LegoCode
                     {
                         lstLog.Items.Add("Keyup S: " + i);
                         Keyboard.KeyDown(Keys.S);
-                        Thread.Sleep(100);
-                        Keyboard.KeyUp(Keys.S);
-                        Thread.Sleep(100);
+                        Keyboard.KeyUp(Keys.S);                      
                     }
                     else if (whatBtn == 2)
                     {
                         lstLog.Items.Add("Keyup Down: " + i);
                         Keyboard.KeyDown(Keys.Down);
-                        Thread.Sleep(100);
-                        Keyboard.KeyUp(Keys.Down);
-                        Thread.Sleep(100);
-
-
+                        Keyboard.KeyUp(Keys.Down);         
                     }
 
 
 
                 }
+                goNextLetter(whatBtn);
             }
-            goNextLetter(whatBtn);
+            
+
 
         }
-        public void cToCount(string letter)
+        public async void cToCount(string letter)
         {
 
 
@@ -253,7 +276,7 @@ namespace LegoCode
                 case "A":
                     Console.WriteLine("0");
                     Keyboard.KeyDown(Keys.D);
-                    Thread.Sleep(100);
+                    await Task.Delay(1000);
                     Keyboard.KeyUp(Keys.D);
                     break;
                 // Arrow Up
@@ -380,15 +403,19 @@ namespace LegoCode
         {
             if (textBox1.Text == "")
             {
-                MessageBox.Show("Sorry you haven't written anything!");
+                lstLog.Items.Add("Sorry you haven't written anything!");
             }
             if (textBox1.Text.Length < 6)
             {
-                MessageBox.Show("Less than 6");
+                lstLog.Items.Add("Less than 6");
             }
             if (textBox1.Text.Length != 0 && textBox1.Text.Length == 6)
             {
                 listBox1.Items.Add(textBox1.Text);
+            }
+            else if(textBox1.Text.Length > 6)
+            {
+                lstLog.Items.Add("Too long!");
             }
 
 
